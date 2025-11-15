@@ -7,8 +7,9 @@ version = "4.2.7"
 
 [tasks]
 build-linux = "FC=ifx meson setup builddir && meson compile -C builddir"
-build-windows = "meson setup builddir_windows --cross-file cross_mingw.txt && meson compile -C builddir_windows"
-clean = "rm -rf builddir builddir_windows"
+build-windows-cross = "meson setup builddir_windows --cross-file cross_mingw.txt && meson compile -C builddir_windows"
+build-windows-native = "meson setup builddir_windows_native && meson compile -C builddir_windows_native"
+clean = "rm -rf builddir builddir_windows builddir_windows_native"
 setup-ifx = 'bash -c "source /opt/intel/oneapi/setvars.sh && exec bash"'
 
 [dependencies]

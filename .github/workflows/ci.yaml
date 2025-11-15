@@ -55,7 +55,7 @@ jobs:
         run: pixi install
 
       - name: Build static libraries with Meson
-        run: pixi run build-windows
+        run: pixi run build-windows-native
 
       - name: Archive Windows libraries
         run: |
