@@ -100,6 +100,15 @@ jobs:
           name: windows-libs
           path: dist/windows
 
+      - name: Debug - List downloaded files
+        run: |
+          echo "Contents of dist directory:"
+          find dist -type f -ls
+          echo "\nLinux dist contents:"
+          ls -la dist/linux/ || echo "No linux directory"
+          echo "\nWindows dist contents:"
+          ls -la dist/windows/ || echo "No windows directory"
+
       - name: Create git tag from pixi.toml version
         id: tag_version
         run: |
@@ -113,7 +122,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/linux/* dist/windows/*
+          files: |
+            dist/linux/*.a
+            dist/windows/*.a
           tag_name: ${{ steps.tag_version.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
