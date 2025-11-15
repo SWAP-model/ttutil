@@ -1,0 +1,17 @@
+[workspace]
+authors = ["zawadzkim <zawadzkimat@outlook.com>"]
+channels = ["conda-forge"]
+name = "ttutil"
+platforms = ["linux-64", "win-64"]
+version = "4.2.7"
+
+[tasks]
+build-linux = "FC=ifx meson setup builddir && meson compile -C builddir"
+build-windows = "meson setup builddir_windows --cross-file cross_mingw.txt && meson compile -C builddir_windows"
+clean = "rm -rf builddir builddir_windows"
+setup-ifx = 'bash -c "source /opt/intel/oneapi/setvars.sh && exec bash"'
+
+[dependencies]
+python = "3.11.*"
+meson = "==1.7"
+ninja = ">=1.8"

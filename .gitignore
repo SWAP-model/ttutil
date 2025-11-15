@@ -1,0 +1,39 @@
+# Compiled object files
+*.o
+*.obj
+
+# Compiled libraries
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+
+# Executables
+*.exe
+*.out
+
+# Build directories
+build/
+builddir/
+builddir_*/
+
+# Fortran module files
+*.mod
+*.smod
+
+# Backup files
+*.bak
+*~
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Meson build files
+.mesonpy-*
