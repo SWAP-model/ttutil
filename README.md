@@ -13,3 +13,10 @@ During development, to get new executable, run pixi task:
 - build-linux - to build the linux executable
 - build-windows-cross - to build the windows executable on a linux machine
 - build-windows-native - to build the windows executable on a windows machine
+
+## Obtaining the latest release
+
+you can make a post request or use curl/wget to download this into your repository.
+
+https://github.com/SWAP-model/ttutil/releases/latest/download/libttutil427_windows.a
+https://github.com/SWAP-model/ttutil/releases/latest/download/libttutil427_linux.a
