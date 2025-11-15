@@ -30,7 +30,13 @@ jobs:
       - name: Archive Linux libraries
         run: |
           mkdir -p dist/linux
-          cp builddir/lib/*.a dist/linux/ || true
+          ls -la builddir/
+          if [ -f builddir/*.a ]; then
+            cp builddir/*.a dist/linux/
+          else
+            echo "No .a files found in builddir/"
+            exit 1
+          fi
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -60,7 +66,13 @@ jobs:
       - name: Archive Windows libraries
         run: |
           mkdir dist
-          cp builddir_windows_native/*.a dist/
+          Get-ChildItem builddir_windows_native/
+          if (Test-Path "builddir_windows_native/*.a") {
+            Copy-Item builddir_windows_native/*.a dist/
+          } else {
+            Write-Error "No .a files found in builddir_windows_native/"
+            exit 1
+          }
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
