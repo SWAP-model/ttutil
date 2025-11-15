@@ -33,7 +33,7 @@ jobs:
           cp builddir/lib/*.a dist/linux/ || true
 
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-libs
           path: dist/linux
@@ -63,7 +63,7 @@ jobs:
           cp builddir_windows/lib/*.a dist/windows/ || true
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-libs
           path: dist/windows
