@@ -100,14 +100,12 @@ jobs:
           name: windows-libs
           path: dist/windows
 
-      - name: Debug - List downloaded files
+      - name: Rename libraries with platform-specific names
         run: |
-          echo "Contents of dist directory:"
-          find dist -type f -ls
-          echo "\nLinux dist contents:"
-          ls -la dist/linux/ || echo "No linux directory"
-          echo "\nWindows dist contents:"
-          ls -la dist/windows/ || echo "No windows directory"
+          mv dist/linux/libttutil427.a dist/linux/libttutil427-linux.a
+          mv dist/windows/libttutil427.a dist/windows/libttutil427-windows.a
+          echo "Files after renaming:"
+          ls -la dist/linux/ dist/windows/
 
       - name: Create git tag from pixi.toml version
         id: tag_version
@@ -123,8 +121,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/linux/*.a
-            dist/windows/*.a
+            dist/linux/libttutil427-linux.a
+            dist/windows/libttutil427-windows.a
           tag_name: ${{ steps.tag_version.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
