@@ -45,7 +45,16 @@ jobs:
         with:
           name: windows-libs
           path: dist/windows
-
+          
+      - name: Debug - List downloaded files
+        run: |
+          echo "Contents of dist directory:"
+          find dist -type f -ls
+          echo -e "\nLinux dist contents:"
+          ls -la dist/linux/ || echo "No linux directory"
+          echo -e "\nWindows dist contents:"
+          ls -la dist/windows/ || echo "No windows directory"
+          
       - name: Create git tag from build version
         id: tag_version
         run: |
