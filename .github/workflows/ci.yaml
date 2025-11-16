@@ -26,8 +26,17 @@ jobs:
       build-dir: builddir_windows_native
       runner: windows-latest
 
+  build-mingw:
+    uses: ./.github/workflows/build-library.yml
+    with:
+      library-name: ttutil
+      platform: mingw
+      build-command: pixi run build-windows-cross
+      build-dir: builddir_windows
+      runner: ubuntu-latest
+
   release:
-    needs: [build-linux, build-windows]
+    needs: [build-linux, build-windows, build-mingw]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -45,6 +54,12 @@ jobs:
         with:
           name: windows-libs
           path: dist/windows
+
+      - name: Download MinGW artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mingw-libs
+          path: dist/mingw
           
       - name: Create git tag from build version
         id: tag_version
@@ -62,6 +77,7 @@ jobs:
           files: |
             dist/linux/libttutil${{ needs.build-linux.outputs.version }}-linux.a
             dist/windows/libttutil${{ needs.build-linux.outputs.version }}-windows.a
+            dist/mingw/libttutil${{ needs.build-linux.outputs.version }}-mingw.a
           tag_name: ${{ steps.tag_version.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
