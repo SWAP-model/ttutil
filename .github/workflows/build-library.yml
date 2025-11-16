@@ -91,10 +91,10 @@ jobs:
       - name: Archive libraries (Windows)
         if: inputs.platform == 'windows'
         run: |
-          mkdir dist
+          mkdir -p dist/${{ inputs.platform }}
           Get-ChildItem ${{ inputs.build-dir }}/
           if (Test-Path "${{ inputs.build-dir }}/*.a") {
-            Copy-Item ${{ inputs.build-dir }}/*.a dist/lib${{ inputs.library-name }}${{ steps.get_version.outputs.version }}-${{ inputs.platform }}.a
+            Copy-Item ${{ inputs.build-dir }}/*.a dist/${{ inputs.platform }}/lib${{ inputs.library-name }}${{ steps.get_version.outputs.version }}-${{ inputs.platform }}.a
           } else {
             Write-Error "No .a files found in ${{ inputs.build-dir }}/"
             exit 1
