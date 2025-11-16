@@ -55,7 +55,7 @@ jobs:
         run: pixi install
 
       - name: Extract version from pixi.toml (Linux)
-        if: inputs.platform == 'linux'
+        if: inputs.platform == 'linux' || inputs.platform == 'mingw'
         id: get_version_linux
         run: |
           VERSION=$(grep '^version' pixi.toml | head -n1 | awk -F'"' '{print $2}')
@@ -73,7 +73,7 @@ jobs:
       - name: Set version output
         id: get_version
         run: |
-          if [ "${{ inputs.platform }}" = "linux" ]; then
+          if [ "${{ inputs.platform }}" = "linux" ] || [ "${{ inputs.platform }}" = "mingw" ]; then
             echo "version=${{ steps.get_version_linux.outputs.version }}" >> $GITHUB_OUTPUT
           else
             echo "version=${{ steps.get_version_windows.outputs.version }}" >> $GITHUB_OUTPUT
@@ -85,6 +85,18 @@ jobs:
 
       - name: Archive libraries (Linux)
         if: inputs.platform == 'linux'
+        run: |
+          mkdir -p dist
+          ls -la ${{ inputs.build-dir }}/
+          if [ -f ${{ inputs.build-dir }}/*.a ]; then
+            cp ${{ inputs.build-dir }}/*.a dist/lib${{ inputs.library-name }}${{ steps.get_version.outputs.version }}-${{ inputs.platform }}.a
+          else
+            echo "No .a files found in ${{ inputs.build-dir }}/"
+            exit 1
+          fi
+
+      - name: Archive libraries (MinGW)
+        if: inputs.platform == 'mingw'
         run: |
           mkdir -p dist
           ls -la ${{ inputs.build-dir }}/
