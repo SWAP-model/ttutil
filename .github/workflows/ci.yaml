@@ -35,8 +35,17 @@ jobs:
       build-dir: builddir_windows
       runner: ubuntu-latest
 
+  build-linux-gfortran:
+    uses: ./.github/workflows/build-library.yml
+    with:
+      library-name: ttutil
+      platform: gfortran
+      build-command: pixi run build-linux-gfortran
+      build-dir: builddir_gfortran
+      runner: ubuntu-latest
+
   release:
-    needs: [build-linux, build-windows, build-mingw]
+    needs: [build-linux, build-windows, build-mingw, build-linux-gfortran]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -60,6 +69,12 @@ jobs:
         with:
           name: mingw-libs
           path: dist/mingw
+
+      - name: Download gfortran artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gfortran-libs
+          path: dist/gfortran
           
       - name: Create git tag from build version
         id: tag_version
@@ -78,6 +93,7 @@ jobs:
             dist/linux/libttutil${{ needs.build-linux.outputs.version }}-linux.a
             dist/windows/libttutil${{ needs.build-linux.outputs.version }}-windows.a
             dist/mingw/libttutil${{ needs.build-linux.outputs.version }}-mingw.a
+            dist/gfortran/libttutil${{ needs.build-linux.outputs.version }}-gfortran.a
           tag_name: ${{ steps.tag_version.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

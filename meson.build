@@ -23,6 +23,18 @@ if fc.get_id() == 'intel'
         add_project_link_arguments(['-static'], language : 'fortran')
     endif
     
+# GCC/gfortran compiler settings for Linux
+# This is needed for testing because the phunit needs to be built with gfortran.
+elif fc.get_id() == 'gcc' and host_machine.system() == 'linux'
+    add_project_arguments([
+        '-O2',
+        '-fPIC',
+        '-ffree-line-length-none',
+        '-Wno-line-truncation',
+        '-Wno-compare-reals',
+        '-std=legacy',
+    ], language : 'fortran')
+    
 # MinGW Fortran compiler settings for Windows cross-compilation
 elif fc.get_id() == 'gcc' and host_machine.system() == 'windows'
     add_project_arguments([
@@ -205,6 +217,9 @@ all_sources = f90_sources + for_sources
 if host_machine.system() == 'windows' and fc.get_id() == 'gcc'
     # For Windows cross-compilation with MinGW
     library_name = 'ttutil427_windows'
+elif fc.get_id() == 'gcc' and host_machine.system() == 'linux'
+    # For Linux gfortran compilation
+    library_name = 'ttutil427_gfortran'
 else
     # For native Intel compilation  
     library_name = 'ttutil427'
@@ -213,6 +228,11 @@ endif
 ttutil_lib = static_library(library_name, all_sources,
     install : true,
     install_dir : 'lib'
+)
+
+# Exportable dependency for use as a Meson subproject
+ttutil_dep = declare_dependency(
+    link_with : ttutil_lib,
 )
 
 # Create an include directory with module files
